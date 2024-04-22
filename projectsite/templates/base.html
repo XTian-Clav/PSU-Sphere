@@ -14,7 +14,7 @@
 	<div class="wrapper">
 		<div class="main-header">
 			<div class="logo-header">
-				<a href="index.html" class="logo">
+				<a href="" class="logo">
 					Ready Dashboard
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,7 @@
 											<div class="notif-icon notif-success"> <i class="la la-comment"></i> </div>
 											<div class="notif-content">
 												<span class="block">
-													Rahmad commented on Admin
+													Elon Musk commented on Admin
 												</span>
 												<span class="time">12 minutes ago</span> 
 											</div>
@@ -82,7 +82,7 @@
 											</div>
 											<div class="notif-content">
 												<span class="block">
-													Reza send messages to you
+													Mark Zuckerberg send messages to you
 												</span>
 												<span class="time">12 minutes ago</span> 
 											</div>
@@ -91,7 +91,7 @@
 											<div class="notif-icon notif-danger"> <i class="la la-heart"></i> </div>
 											<div class="notif-content">
 												<span class="block">
-													Farrah liked Admin
+													Elon Musk reacted to Admin's photo
 												</span>
 												<span class="time">17 minutes ago</span> 
 											</div>
@@ -111,12 +111,11 @@
 										<div class="u-img"><img src="{% static 'img/profile.jpg' %}" alt="user"></div>
 										<div class="u-text">
 											<h4>XTian</h4>
-											<p class="text-muted">xtian@gmail.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+											<p class="text-muted">xtian@gmail.com</p><a href="" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
 										</div>
 									</li>
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="#"><i class="ti-user"></i> My Profile</a>
-									<a class="dropdown-item" href="#"></i> My Balance</a>
 									<a class="dropdown-item" href="#"><i class="ti-email"></i> Inbox</a>
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="#"><i class="ti-settings"></i> Account Setting</a>
@@ -162,13 +161,18 @@
 											<span class="link-collapse">Settings</span>
 										</a>
 									</li>
+									<li>
+										<a href="#logout">
+											<span class="link-collapse">Logout</span>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</div>
 					</div>
 					<ul class="nav">
 						<li class="nav-item">
-							<a href="index.html">
+							<a href="">
 								<i class="la la-dashboard"></i>
 								<p>Dashboard</p>
 							</a>
@@ -180,25 +184,25 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="forms.html">
+							<a href="{% url 'orgmember-list' %}">
 								<i class="la la-keyboard-o"></i>
 								<P>Org. Member</P>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="tables.html">
+							<a href="{% url 'student-list' %}">
 								<i class="la la-th"></i>
 								<P>Student</P>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="notifications.html">
+							<a href="{% url 'college-list' %}">
 								<i class="la la-bell"></i>
 								<P>College</P>
 							</a>
 						</li>
 						<li class="nav-item active">
-							<a href="typography.html">
+							<a href="{% url 'program-list' %}">
 								<i class="la la-font"></i>
 								<p>Program</p>
 								<span class="badge badge-danger">25</span>
