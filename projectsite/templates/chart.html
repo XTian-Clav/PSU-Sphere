@@ -8,7 +8,19 @@
     <div class="col-md-12">
       <div class="card" style="border-radius: 6px;">
         <div class="card-header">
-          <div class="card-title">No. of Students per Colleges</div>
+          <div class="card-title">No. of students per College and Program</div>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" style="height: 200px;">
+            <canvas id="multibarChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card" style="border-radius: 6px;">
+        <div class="card-header">
+          <div class="card-title">No. of students per College</div>
         </div>
         <div class="card-body">
           <div class="chart-container">
@@ -20,7 +32,7 @@
     <div class="col-md-6">
       <div class="card" style="border-radius: 6px;">
         <div class="card-header">
-          <div class="card-title">No. of Students per Program</div>
+          <div class="card-title">No. of students per Program</div>
         </div>
         <div class="card-body">
           <div class="chart-container" style="height: 400px;">
@@ -32,7 +44,7 @@
     <div class="col-md-6">
       <div class="card" style="border-radius: 6px;">
         <div class="card-header">
-          <div class="card-title">No. of Students per Organization</div>
+          <div class="card-title">No. of students per Organization</div>
         </div>
         <div class="card-body">
           <div class="chart-container" style="height: 400px;">
@@ -41,26 +53,14 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-12">
       <div class="card" style="border-radius: 6px;">
         <div class="card-header">
-          <div class="card-title">Line Chart</div>
+          <div class="card-title">Orgmembers in the Organization (lowest to highest)</div>
         </div>
         <div class="card-body">
-          <div class="chart-container">
-            <canvas id="orgMemberPieChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card" style="border-radius: 6px;">
-        <div class="card-header">
-          <div class="card-title">Multi Bar Chart</div>
-        </div>
-        <div class="card-body">
-          <div class="chart-container" style="width: 400px;">
-            <canvas id="multibarChart"></canvas>
+          <div class="chart-container" style="height: 200px;">
+            <canvas id="lineChart"></canvas>
           </div>
         </div>
       </div>
@@ -68,8 +68,68 @@
   </div>
 </div>
 <script>
+  function loadMultibarChart() {
+    fetch("/multibarChart/")
+      .then((response) => response.json())
+      .then((data) => {
+        // Convert college and program names to acronyms
+        var collegeLabels = data.college_labels.map(label => {return acronymize(label);});
+        var collegeTotal = data.college_total;
+        var programLabels = data.program_labels.map(label => {return acronymize(label);});
+        var programCounts = data.program_counts;
+
+        var multibar = document.getElementById("multibarChart").getContext("2d");
+        var multibarChart = new Chart(multibar, {
+          type: "bar",
+          data: {
+            labels: collegeLabels, // Use acronyms as x-axis labels
+            datasets: [
+              {
+                label: "No. of Students in Colleges",
+                data: collegeTotal,
+                backgroundColor: "rgba(54, 162, 235, 0.2)", // Blue
+                borderColor: "rgba(54, 162, 235, 1)", // Blue
+                borderWidth: 1
+              },
+              {
+                label: "No. of Students in Programs",
+                data: programCounts,
+                backgroundColor: "rgba(255, 99, 132, 0.2)", // Red
+                borderColor: "rgba(255, 99, 132, 1)", // Red
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                stacked: true,
+              },
+              y: {
+                stacked: true,
+              },
+            },
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Number of Students in Colleges and Programs'
+              }
+            }
+          }
+        });
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+  // Function to generate acronyms
+  function acronymize(name) {return name.split(' ').map(word => word.match(/[A-Z]/)?.[0] || '').join('');}
+
   function loadPieChart() {
-    fetch("/pieChart/")  // Endpoint for college data
+    fetch("/pieChart/")
       .then((response) => response.json())
       .then((data) => {
         var labels = data.college_labels;
@@ -117,7 +177,7 @@
           data: {
             labels: labels,
             datasets: [{
-              label: 'Organization Counts',
+              label: 'Program Distribution',
               data: counts,
               backgroundColor: [
                 '#36A2EB', // Blue
@@ -141,6 +201,7 @@
           }
         });
       })
+      .catch((error) => console.error("Error:", error));
   }
 
   function loadBarChart() {
@@ -183,8 +244,48 @@
       })
       .catch((error) => console.error("Error:", error));
   }
+
+  function loadLineChart() {
+    fetch("/lineChart/")
+      .then((response) => response.json())
+      .then((data) => {
+        var labels = data.labels;
+        var counts = data.counts;
+        var lineChart = document.getElementById("lineChart").getContext("2d");
+
+        new Chart(lineChart, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'No. of Orgmembers',
+              data: counts,
+              backgroundColor: 'rgba(0, 173, 181, 0.2)', // Teal with transparency
+              borderColor: '#00ADB5', // Teal
+              pointBackgroundColor: '#00ADB5', // Teal
+              pointBorderColor: '#fff', // White
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+  loadMultibarChart();
   loadPieChart();
   loadDoughnutChart();
   loadBarChart();
+  loadLineChart();
 </script>
 {% endblock %}

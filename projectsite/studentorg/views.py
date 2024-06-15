@@ -35,6 +35,23 @@ class ChartView(ListView):
     def get_queryset(self, *args, **kwargs):
         pass
 
+def multibarChart(request):
+    college_total = College.objects.annotate(student_count=models.Count('program__student'))
+    college_labels = [college.college_name for college in college_total]
+    college_total = [college.student_count for college in college_total]
+
+    program_counts = Program.objects.annotate(student_count=models.Count('student'))
+    program_labels = [program.prog_name for program in program_counts]
+    program_counts = [program.student_count for program in program_counts]
+
+    data = {
+        'college_labels': college_labels,
+        'college_total': college_total,
+        'program_labels': program_labels,
+        'program_counts': program_counts,
+    }
+    return JsonResponse(data)
+
 def pieChart(request):
     num_college = College.objects.annotate(student_count=models.Count('program__student'))
     labels = [college.college_name for college in num_college]
@@ -65,20 +82,9 @@ def barChart(request):
     return JsonResponse(data)
 
 def lineChart(request):
-    org_join_counts = OrgMember.objects.values('date_joined').annotate(count=Count('student')).order_by('date_joined')
-    labels = [item['date_joined'].strftime('%Y-%m-%d') for item in org_join_counts]
-    counts = [item['count'] for item in org_join_counts]
-
-    data = {
-        'labels': labels,
-        'counts': counts,
-    }
-    return JsonResponse(data)
-
-def multibarChart(request):
-    org_join_counts = OrgMember.objects.values('date_joined').annotate(count=Count('student')).order_by('date_joined')
-    labels = [item['date_joined'].strftime('%Y-%m-%d') for item in org_join_counts]
-    counts = [item['count'] for item in org_join_counts]
+    org_member = OrgMember.objects.values('organization__name').annotate(count=Count('student')).order_by('count')
+    labels = [item['organization__name'] for item in org_member]
+    counts = [item['count'] for item in org_member]
 
     data = {
         'labels': labels,
