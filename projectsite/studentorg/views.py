@@ -16,6 +16,7 @@ from django.http import JsonResponse
 from django.db.models.functions import ExtractMonth
 from django.db.models import Count
 from datetime import datetime
+from django.db import models
 
 @method_decorator(login_required, name='dispatch')
 
@@ -33,6 +34,57 @@ class ChartView(ListView):
 
     def get_queryset(self, *args, **kwargs):
         pass
+
+def pieChart(request):
+    num_college = College.objects.annotate(student_count=models.Count('program__student'))
+    labels = [college.college_name for college in num_college]
+    counts = [college.student_count for college in num_college]
+    
+    return JsonResponse({'college_labels': labels, 'college_counts': counts})
+
+def doughnutChart(request):
+    students_in_program = Student.objects.values('program__prog_name').annotate(count=Count('id'))
+    labels = [item['program__prog_name'] for item in students_in_program]
+    counts = [item['count'] for item in students_in_program]
+
+    data = {
+        'labels': labels,
+        'counts': counts,
+    }
+    return JsonResponse(data)
+
+def barChart(request):
+    org_member = OrgMember.objects.values('organization__name').annotate(count=Count('student'))
+    labels = [item['organization__name'] for item in org_member]
+    counts = [item['count'] for item in org_member]
+
+    data = {
+        'labels': labels,
+        'counts': counts,
+    }
+    return JsonResponse(data)
+
+def lineChart(request):
+    org_join_counts = OrgMember.objects.values('date_joined').annotate(count=Count('student')).order_by('date_joined')
+    labels = [item['date_joined'].strftime('%Y-%m-%d') for item in org_join_counts]
+    counts = [item['count'] for item in org_join_counts]
+
+    data = {
+        'labels': labels,
+        'counts': counts,
+    }
+    return JsonResponse(data)
+
+def multibarChart(request):
+    org_join_counts = OrgMember.objects.values('date_joined').annotate(count=Count('student')).order_by('date_joined')
+    labels = [item['date_joined'].strftime('%Y-%m-%d') for item in org_join_counts]
+    counts = [item['count'] for item in org_join_counts]
+
+    data = {
+        'labels': labels,
+        'counts': counts,
+    }
+    return JsonResponse(data)
 
 class OrganizationList(ListView):
     model = Organization

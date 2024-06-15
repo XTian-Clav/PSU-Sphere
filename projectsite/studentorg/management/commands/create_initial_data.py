@@ -7,8 +7,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         self.create_organization(0)
-        self.create_students(10)
-        self.create_membership(10)
+        self.create_students(30)
+        self.create_membership(30)
 
     def create_organization(self, count):
         fake = Faker()

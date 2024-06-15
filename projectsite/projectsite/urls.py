@@ -1,12 +1,28 @@
 from django.contrib import admin
 from django.urls import path, re_path
-from studentorg.views import HomePageView, OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, OrgMemberList , OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView,  StudentList , StudentCreateView, StudentUpdateView, StudentDeleteView,  CollegeList , CollegeCreateView, CollegeUpdateView, CollegeDeleteView, ProgramList , ProgramCreateView, ProgramUpdateView, ProgramDeleteView
+
+from studentorg.views import (
+    HomePageView, ChartView, pieChart, doughnutChart, barChart, lineChart, multibarChart,
+    OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView,
+    OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView,
+    StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView,
+    CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView,
+    ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView
+)
+
 from studentorg import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HomePageView.as_view(), name='home'),
+
+    path('dashboard_chart', ChartView.as_view(), name='dashboard-chart'),
+    path('pieChart/', pieChart, name='pieChart'),
+    path('doughnutChart/', doughnutChart, name='doughnutChart'),
+    path('barChart/', barChart, name='barChart'),
+    path('lineChart/', views.lineChart, name='lineChart'),
+    path('multibarChart/', views.multibarChart, name='multibarChart'),
 
     path('organization-list/', OrganizationList.as_view(), name='organization-list'),
     path('organization-list/add/', OrganizationCreateView.as_view(), name='organization-add'),
