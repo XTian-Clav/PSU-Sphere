@@ -113,7 +113,7 @@
             },
             plugins: {
               legend: {
-                position: 'top',
+                position: 'bottom',
               },
               title: {
                 display: true,
@@ -157,7 +157,12 @@
             }]
           },
           options: {
-            responsive: true
+            responsive: true,
+            pieceLabel: {
+              render: "percentage",
+              fontColor: "white",
+              fontSize: 14,
+            },
           }
         });
       })
@@ -198,6 +203,11 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            pieceLabel: {
+              render: "percentage",
+              fontColor: "white",
+              fontSize: 14,
+            },
           }
         });
       })
